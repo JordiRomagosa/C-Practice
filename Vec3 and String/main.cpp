@@ -3,10 +3,10 @@
 
 int main()
 {
-	Vec3 a = Vec3();
-	Vec3 b = Vec3(1, 0, 1);
-	Vec3 c = Vec3(b);
-	Vec3 d = b + c;
+	Vec3<int> a = Vec3<int>();
+	Vec3<int> b(1, 0, 1);
+	Vec3<int> c(b);
+	Vec3<int> d = b + c;
 
 	std::cout << "a: " << a.x << ", " << a.y << ", " << a.z << "\n";
 	std::cout << "b: " << b.x << ", " << b.y << ", " << b.z << "\n";

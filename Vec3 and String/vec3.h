@@ -1,13 +1,14 @@
 #include <math.h>
 
+template <typename T>
 class Vec3
 {
 public:
 	
-	int x, y, z;
+	T x, y, z;
 
 	Vec3() : x(0), y(0), z(0) {};
-	Vec3(int x, int y, int z) : x(x), y(y), z(z) {};
+	Vec3(T x, T y, T z) : x(x), y(y), z(z) {};
 
 	Vec3 operator +(Vec3 v) {
 		return Vec3(x + v.x, y + v.y, z + v.z);
