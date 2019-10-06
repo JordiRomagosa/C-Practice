@@ -1,5 +1,6 @@
 #include <iostream>
 #include "vec3.h"
+#include "cstring.h"
 
 int main()
 {
@@ -18,5 +19,12 @@ int main()
 
 	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b);
 
+	String e("hello");
+	String f(e);
+
+	std::cout << "\n" << "String e: " << e.cstr << "\n";
+	std::cout << "\n" << "String f: " << f.cstr << "\n";
+
 	while (1) {};
 }
+
