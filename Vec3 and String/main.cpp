@@ -17,13 +17,17 @@ int main()
 	d.Normalize();
 	std::cout << "\n" << "Normalized d: " << d.x << ", " << d.y << ", " << d.z << "\n";
 
-	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b);
+	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b) << "\n";
 
 	String e("hello");
 	String f(e);
+	String g = e + f;
 
-	std::cout << "\n" << "String e: " << e.cstr << "\n";
-	std::cout << "\n" << "String f: " << f.cstr << "\n";
+	std::cout << "\n" << "String e: " << e.cstr;
+	std::cout << "\n" << "String f: " << f.cstr;
+	std::cout << "\n" << "String g: " << g.cstr;
+
+	std::cout << "\n" << "Length of g: " << g.length();
 
 	while (1) {};
 }

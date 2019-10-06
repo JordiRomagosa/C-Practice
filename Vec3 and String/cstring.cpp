@@ -20,4 +20,23 @@ String::String(const char* str)
 		cstr[i] = str[i];
 }
 
+char * String::operator+(String & str)
+{
+	short size = strlen + str.strlen - 1;
+	char* string = new char[size];
+
+	for (int i = 0; i < strlen - 1; i++)
+		string[i] = cstr[i];
+	for (int i = strlen - 1; i < size; i++)
+		string[i] = str.cstr[i - (strlen - 1)];
+
+	return string;
+}
+
+short String::length()
+{
+	return strlen - 1;
+}
+
+
 

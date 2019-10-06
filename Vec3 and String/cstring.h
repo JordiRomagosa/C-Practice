@@ -9,9 +9,9 @@ public:
 	
 	String(const char* str);
 
-	//String operator +(String str);
+	char* operator +(String& str);
 	//bool operator ==(const char* str);
-	//short length();
+	short length();
 	//void clear();
 };
 
