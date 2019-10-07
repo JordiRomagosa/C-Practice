@@ -10,6 +10,7 @@
 String::String(const char* str)
 {
 	strlen = 1;
+	
 	while (*str++)
 		strlen++;
 
@@ -33,9 +34,35 @@ char * String::operator+(String & str)
 	return string;
 }
 
+bool String::operator==(const char * str)
+{
+	bool same = true;
+
+	for (int i = 0; i < strlen; i++) {
+		if (*cstr++ != *str++) {
+			same = false;
+			cstr = cstr - (i + 1);
+			break;
+		}
+		
+	}
+
+	if (same)
+		cstr = cstr - strlen;
+	
+	return same;
+}
+
 short String::length()
 {
 	return strlen - 1;
+}
+
+void String::clear()
+{
+	strlen = 1;
+	cstr = new char[strlen];
+	cstr[0] = '\0';
 }
 
 

@@ -17,7 +17,7 @@ int main()
 	d.Normalize();
 	std::cout << "\n" << "Normalized d: " << d.x << ", " << d.y << ", " << d.z << "\n";
 
-	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b) << "\n";
+	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b) << "\n\n";
 
 	String e("hello");
 	String f(e);
@@ -27,7 +27,15 @@ int main()
 	std::cout << "\n" << "String f: " << f.cstr;
 	std::cout << "\n" << "String g: " << g.cstr;
 
+	if (g == "hellohello")
+		std::cout << "\n\n" << "String comparison to literal is correct" << "\n";
+	else
+		std::cout << "\n\n" << "String comparison to literal isnt correct" << "\n";
+
 	std::cout << "\n" << "Length of g: " << g.length();
+
+	g.clear();
+	std::cout << "\n" << "Length of g after clear: " << g.length();
 
 	while (1) {};
 }

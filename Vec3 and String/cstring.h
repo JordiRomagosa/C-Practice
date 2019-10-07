@@ -10,8 +10,8 @@ public:
 	String(const char* str);
 
 	char* operator +(String& str);
-	//bool operator ==(const char* str);
+	bool operator ==(const char* str);
 	short length();
-	//void clear();
+	void clear();
 };
 
