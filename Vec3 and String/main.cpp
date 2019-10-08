@@ -4,18 +4,18 @@
 
 int main()
 {
-	Vec3<int> a = Vec3<int>();
-	Vec3<int> b(1, 0, 1);
-	Vec3<int> c(b);
-	Vec3<int> d = b + c;
+	Vec3<double> a = Vec3<double>();
+	Vec3<double> b(1, 0, 1);
+	Vec3<double> c(b);
+	Vec3<double> d = b + c;
 
 	std::cout << "a: " << a.x << ", " << a.y << ", " << a.z << "\n";
 	std::cout << "b: " << b.x << ", " << b.y << ", " << b.z << "\n";
 	std::cout << "c: " << c.x << ", " << c.y << ", " << c.z << "\n";
 	std::cout << "d: " << d.x << ", " << d.y << ", " << d.z << "\n";
 
-	d.Normalize();
-	std::cout << "\n" << "Normalized d: " << d.x << ", " << d.y << ", " << d.z << "\n";
+	Vec3<double> normalized = d.normalize();
+	std::cout << "\n" << "Normalized d: " << normalized.x << ", " << normalized.y << ", " << normalized.z << "\n";
 
 	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b) << "\n\n";
 
