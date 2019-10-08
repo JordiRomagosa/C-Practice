@@ -22,15 +22,22 @@ int main()
 	String e("hello");
 	String f(e);
 	String g = e + f;
+	String h = " world";
 
-	std::cout << "\n" << "String e: " << e.cstr;
-	std::cout << "\n" << "String f: " << f.cstr;
-	std::cout << "\n" << "String g: " << g.cstr;
+	std::cout << "\n" << "String e: " << e;
+	std::cout << "\n" << "String f: " << f;
+	std::cout << "\n" << "String g: " << g;
+	std::cout << "\n" << "String h: " << h;
 
 	if (g == "hellohello")
 		std::cout << "\n\n" << "String comparison to literal is correct" << "\n";
 	else
 		std::cout << "\n\n" << "String comparison to literal isnt correct" << "\n";
+
+	if (e == f)
+		std::cout << "String comparison to string is correct" << "\n";
+	else
+		std::cout << "String comparison to string isnt correct" << "\n";
 
 	std::cout << "\n" << "Length of g: " << g.length();
 

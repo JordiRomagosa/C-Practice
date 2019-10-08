@@ -1,17 +1,25 @@
+#include <iostream>
 class String
 {
 
 private:
-	short strlen;
+	char * string = nullptr;
+	short size = 0;
+	short mem_size  = 0;
 	
 public:
-	char* cstr;
-	
-	String(const char* str);
+	String() {};
+	String(const String & str);
+	String(const char * str);
+	virtual ~String();
 
-	char* operator +(String& str);
-	bool operator ==(const char* str);
-	short length();
+	char * operator +(const String & str) const;
+	bool operator ==(const char * str) const;
+	bool operator ==(const String & str) const;
+	String & operator =(const String & str);
+	friend std::ostream & operator <<(std::ostream & out, String & str);
+
+	short length() const;
 	void clear();
 };
 

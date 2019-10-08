@@ -1,69 +1,103 @@
 #include "cstring.h"
-#include <iostream>
 
-/*String::String(): strlen(1)
+String::String(const String & str)
 {
-	cstr = new char[strlen];
-	cstr[strlen - 1] = '\0';
-}*/
+	size = str.size;
+	mem_size = size + 1;
+
+	string = new char[mem_size];
+
+	for (int i = 0; i < mem_size; i++)
+		string[i] = str.string[i];
+}
 
 String::String(const char* str)
 {
-	strlen = 1;
-	
 	while (*str++)
-		strlen++;
+		size++;
 
-	cstr = new char[strlen];
-	str = str - strlen;
+	mem_size = size + 1;
+	string = new char[mem_size];
+	str = str - mem_size;
 
-	for (int i = 0; i < strlen; i++)
-		cstr[i] = str[i];
+	for (int i = 0; i < mem_size; i++)
+		string[i] = str[i];
 }
 
-char * String::operator+(String & str)
+String::~String()
 {
-	short size = strlen + str.strlen - 1;
-	char* string = new char[size];
-
-	for (int i = 0; i < strlen - 1; i++)
-		string[i] = cstr[i];
-	for (int i = strlen - 1; i < size; i++)
-		string[i] = str.cstr[i - (strlen - 1)];
-
-	return string;
+	delete[] string;
 }
 
-bool String::operator==(const char * str)
+char * String::operator+(const String & str) const
 {
-	bool same = true;
+	short new_size = size + str.size + 1;
 
-	for (int i = 0; i < strlen; i++) {
-		if (*cstr++ != *str++) {
-			same = false;
-			cstr = cstr - (i + 1);
-			break;
-		}
-		
-	}
+	char* new_string = new char[new_size + 1];
 
-	if (same)
-		cstr = cstr - strlen;
-	
-	return same;
+	for (int i = 0; i < size; i++)
+		new_string[i] = string[i];
+	for (int i = size; i < new_size; i++)
+		new_string[i] = str.string[i - size];
+
+	return new_string;
 }
 
-short String::length()
+bool String::operator==(const char * str) const
 {
-	return strlen - 1;
+	short other_str_size = 0;
+	while (*str++)
+		other_str_size++;
+
+	if (size != other_str_size)
+		return false;
+
+	str = str - mem_size;
+	for (int i = 0; i < size; i++)
+		if (string[i] != str[i])
+			return false;
+
+	return true;
+}
+
+bool String::operator==(const String & str) const
+{
+	if (size != str.size)
+		return false;
+
+	for (int i = 0; i < size; i++)
+		if (string[i] != str.string[i])
+			return false;
+
+	return true;
+}
+
+String & String::operator=(const String & str)
+{
+	size = str.size;
+	mem_size = str.mem_size;
+	delete[] string;
+	string = new char[mem_size];
+
+	for (int i = 0; i < mem_size; i++)
+		string[i] = str.string[i];
+
+	return *this;
+}
+
+short String::length() const
+{
+	return size;
 }
 
 void String::clear()
 {
-	strlen = 1;
-	cstr = new char[strlen];
-	cstr[0] = '\0';
+	size = 0;
+	string[0] = '\0';
 }
 
-
-
+std::ostream & operator<<(std::ostream & out, String & str)
+{
+	out << str.string;
+	return out;
+}
