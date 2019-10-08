@@ -10,6 +10,7 @@ public:
 	Vec3() : x(0), y(0), z(0) {};
 	Vec3(T x, T y, T z) : x(x), y(y), z(z) {};
 	Vec3(const Vec3<T> & v) : x(v.x), y(v.y), z(v.z) {};
+	virtual ~Vec3() {};
 
 	Vec3<T> operator +(const Vec3<T> & v) const {
 		return Vec3(x + v.x, y + v.y, z + v.z);
