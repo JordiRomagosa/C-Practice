@@ -13,10 +13,10 @@ public:
 	String(const char * str);
 	virtual ~String();
 
-	char * operator +(const String & str) const;
+	String operator +(const String & str) const;
 	bool operator ==(const char * str) const;
 	bool operator ==(const String & str) const;
-	String & operator =(const String & str);
+	String operator =(const String & str);
 	friend std::ostream & operator <<(std::ostream & out, String & str);
 
 	short length() const;

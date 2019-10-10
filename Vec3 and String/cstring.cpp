@@ -29,7 +29,7 @@ String::~String()
 	delete[] string;
 }
 
-char * String::operator+(const String & str) const
+String String::operator+(const String & str) const
 {
 	short new_size = size + str.size + 1;
 
@@ -40,7 +40,9 @@ char * String::operator+(const String & str) const
 	for (int i = size; i < new_size; i++)
 		new_string[i] = str.string[i - size];
 
-	return new_string;
+	String ret = String(new_string);
+
+	return ret;
 }
 
 bool String::operator==(const char * str) const
@@ -52,7 +54,7 @@ bool String::operator==(const char * str) const
 	if (size != other_str_size)
 		return false;
 
-	str = str - mem_size;
+	str = str - (other_str_size + 1);
 	for (int i = 0; i < size; i++)
 		if (string[i] != str[i])
 			return false;
@@ -72,7 +74,7 @@ bool String::operator==(const String & str) const
 	return true;
 }
 
-String & String::operator=(const String & str)
+String String::operator=(const String & str)
 {
 	size = str.size;
 	mem_size = str.mem_size;
@@ -93,11 +95,13 @@ short String::length() const
 void String::clear()
 {
 	size = 0;
-	string[0] = '\0';
 }
 
 std::ostream & operator<<(std::ostream & out, String & str)
 {
+	if (str.size == 0)
+		return out;
+
 	out << str.string;
 	return out;
 }

@@ -14,19 +14,21 @@ int main()
 	std::cout << "c: " << c.x << ", " << c.y << ", " << c.z << "\n";
 	std::cout << "d: " << d.x << ", " << d.y << ", " << d.z << "\n";
 
-	Vec3<double> normalized = d.normalize();
-	std::cout << "\n" << "Normalized d: " << normalized.x << ", " << normalized.y << ", " << normalized.z << "\n";
+	d.normalize();
+	std::cout << "\n" << "Normalized d: " << d.x << ", " << d.y << ", " << d.z << "\n";
 
 	std::cout << "\n" << "Distance between d and b: " << d.distance_to(b) << "\n\n";
 
 	String e("hello");
-	String f(e);
-	String g = e + f;
-	String h = " world";
-
 	std::cout << "\n" << "String e: " << e;
+
+	String f(e);
 	std::cout << "\n" << "String f: " << f;
+
+	String g = e + f;
 	std::cout << "\n" << "String g: " << g;
+
+	String h = " world";
 	std::cout << "\n" << "String h: " << h;
 
 	if (g == "hellohello")
