@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleInput.h"
+#include "ModuleScene.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ Application::Application()
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(input = new ModuleInput());
+	modules.push_back(scene = new ModuleScene());
 
 	// TODO 7: Create a new "scene" module that loads a texture and draws it on the screen
 
@@ -44,32 +46,20 @@ bool Application::Init()
 }
 
 // TODO 4: We need to have three updates, add them: PreUpdate Update PostUpdate
-update_status Application::PreUpdate()
+update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
 
-	return ret;
-}
+	if (ret == UPDATE_CONTINUE)
+		for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+			ret = (*it)->Update();
 
-update_status Application::Update()
-{
-	update_status ret = UPDATE_CONTINUE;
-
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->Update();
-
-	return ret;
-}
-
-update_status Application::PostUpdate()
-{
-	update_status ret = UPDATE_CONTINUE;
-
-	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PostUpdate();
+	if (ret == UPDATE_CONTINUE)
+		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+			ret = (*it)->PostUpdate();
 
 	return ret;
 }

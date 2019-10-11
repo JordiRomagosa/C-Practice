@@ -46,7 +46,7 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 	// TODO 5: Now that we have PreUpdate/PostUpdate/Update move things around so we can render :)
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	
 	return UPDATE_CONTINUE;
 }

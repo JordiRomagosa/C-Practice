@@ -51,13 +51,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
-			int update_return = App->PreUpdate();
-
-			if (update_return == UPDATE_CONTINUE)
-				update_return = App->Update();
-
-			if (update_return == UPDATE_CONTINUE)
-				update_return = App->PostUpdate();
+			int update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR)
 			{

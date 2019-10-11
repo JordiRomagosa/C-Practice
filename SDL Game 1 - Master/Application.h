@@ -8,6 +8,7 @@ class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
+class ModuleScene;
 
 class Application
 {
@@ -17,9 +18,7 @@ public:
 	~Application();
 
 	bool Init();
-	update_status PreUpdate();
 	update_status Update();
-	update_status PostUpdate();
 	bool CleanUp();
 
 public:
@@ -27,6 +26,7 @@ public:
 	ModuleWindow* window;
 	ModuleTextures* textures;
 	ModuleInput* input;
+	ModuleScene* scene;
 
 private:
 
