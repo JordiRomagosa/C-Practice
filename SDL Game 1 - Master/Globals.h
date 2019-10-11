@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "SDL/include/SDL_rect.h"
+#include "SDL/include/SDL.h"
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 

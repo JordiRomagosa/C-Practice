@@ -1,8 +1,10 @@
+#include "Globals.h"
 #include "ModuleScene.h"
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
-#include "SDL/include/SDL.h"
+#include "ModuleAudio.h"
+
 
 ModuleScene::ModuleScene()
 {
@@ -18,18 +20,25 @@ ModuleScene::~ModuleScene()
 
 bool ModuleScene::Start()
 {
-	//load image into textures
+	bool ret = true;
+	LOG("Loading scene");
+
 	graphics = App->textures->Load("ditto.png");
-	return true;
+
+	if (!App->audio->PlayMusic("base.wav"))
+		ret = false;
+
+	return ret;
 }
 
 update_status ModuleScene::Update()
 {
-	App->renderer->Blit(graphics, 60, 20, &background);
+	App->renderer->Blit(graphics, 70, 20, &background);
 	return UPDATE_CONTINUE;
 }
 
 bool ModuleScene::CleanUp()
 {
+	LOG("Unloading scene");
 	return true;
 }
