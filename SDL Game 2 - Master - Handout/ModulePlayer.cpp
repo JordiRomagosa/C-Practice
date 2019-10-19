@@ -10,7 +10,7 @@
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
 	position.x = 100;
-	position.y = 216;
+	position.y = 206;
 
 	// idle animation (arcade sprite sheet)
 	idle.frames.push_back({7, 14, 60, 90});
@@ -18,7 +18,7 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	idle.frames.push_back({184, 14, 60, 90});
 	idle.frames.push_back({276, 11, 60, 93});
 	idle.frames.push_back({366, 12, 60, 92});
-	idle.speed = 0.1f;
+	idle.speed = 0.15f;
 	
 	// walk backward animation (arcade sprite sheet)
 	backward.frames.push_back({542, 131, 61, 87});
@@ -27,7 +27,7 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	backward.frames.push_back({797, 127, 57, 90});
 	backward.frames.push_back({883, 128, 58, 91});
 	backward.frames.push_back({974, 129, 57, 89});
-	backward.speed = 0.1f;
+	backward.speed = 0.15f;
 
 	// TODO 8: setup the walk forward animation from ryu4.png
 	forward.frames.push_back({ 9, 136, 53, 83 });
@@ -35,8 +35,8 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	forward.frames.push_back({ 162, 128, 64, 92 });
 	forward.frames.push_back({ 259, 128, 63, 91 });
 	forward.frames.push_back({ 352, 128, 54, 91 });
-	forward.frames.push_back({ 432, 128, 50, 89 });
-	forward.speed = 0.1f;
+	forward.frames.push_back({ 432, 131, 50, 89 });
+	forward.speed = 0.15f;
 }
 
 ModulePlayer::~ModulePlayer()
