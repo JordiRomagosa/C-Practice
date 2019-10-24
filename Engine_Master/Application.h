@@ -23,6 +23,7 @@ public:
 
 public:
 	ModuleRender* renderer = nullptr;
+	ModuleRenderExercise* rendererExercise = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 
