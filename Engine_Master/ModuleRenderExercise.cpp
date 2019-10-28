@@ -63,7 +63,6 @@ update_status ModuleRenderExercise::PreUpdate()
 	int w, h;
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	glViewport(0, 0, w, h);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	float aspect = w / h;
 
@@ -118,8 +117,6 @@ update_status ModuleRenderExercise::Update()
 
 update_status ModuleRenderExercise::PostUpdate()
 {
-	SDL_GL_SwapWindow(App->window->window);
-
 	return UPDATE_CONTINUE;
 }
 

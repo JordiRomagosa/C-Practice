@@ -22,6 +22,8 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -33,6 +35,8 @@ update_status ModuleRender::Update()
 
 update_status ModuleRender::PostUpdate()
 {
+	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 

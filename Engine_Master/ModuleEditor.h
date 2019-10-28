@@ -8,9 +8,6 @@
 #include <GL/glew.h>
 
 
-
-
-
 class ModuleEditor : public Module
 {
 public:
