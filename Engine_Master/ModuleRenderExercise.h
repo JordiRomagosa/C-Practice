@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "MathGeoLib/include/MathGeoLib.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -17,5 +18,12 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+
+private:
+	math::float3 eye;
+	math::float3 up;
+	math::float3 target;
+
+	math::float4x4 matrix;
 };
 
