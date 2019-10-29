@@ -123,6 +123,7 @@
     <ClCompile Include="IMGUI\imgui_impl_opengl3.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -337,6 +338,7 @@
     <ClInclude Include="IMGUI\imgui_impl_opengl3.h">
       <Filter>IMGUI</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleProgram.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -365,5 +367,7 @@
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl">
       <Filter>MathGeoLib</Filter>
     </None>
+    <None Include="Game\default.fs" />
+    <None Include="Game\default.vs" />
   </ItemGroup>
 </Project>

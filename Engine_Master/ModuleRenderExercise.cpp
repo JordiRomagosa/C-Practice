@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleProgram.h"
 #include "SDL.h"
 #include "glew.h"
 #include "MathGeoLib/include/MathGeoLib.h"
@@ -93,9 +94,14 @@ update_status ModuleRenderExercise::Update()
 	vert2 = transform * vert2;
 	vert3 = transform * vert3;
 
+
+	/*float buffer_data[] = { -1.0f, -1.0f, 0.0f,
+							   1.0f, -1.0f, 0.0f,
+							   0.0f, 1.0f, 0.0f };*/
+
 	float buffer_data[] = { vert1.x / vert1.w, vert1.y / vert1.w, vert1.z / vert1.w,
 							vert2.x / vert2.w, vert2.y / vert2.w, vert2.z / vert2.w,
-							vert3.x / vert3.w, vert3.y / vert3.w, vert3.z / vert3.w};
+							vert3.x / vert3.w, vert3.y / vert3.w, vert3.z / vert3.w };
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -113,6 +119,7 @@ update_status ModuleRenderExercise::Update()
 		0,			// stride
 		(void*)0	// array buffer offset
 	);
+	glUseProgram(App->program->program);
 	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

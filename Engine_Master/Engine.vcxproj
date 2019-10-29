@@ -151,6 +151,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleProgram.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleRenderExercise.h" />
     <ClInclude Include="ModuleWindow.h" />
@@ -199,11 +200,14 @@
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleProgram.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleRenderExercise.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\default.fs" />
+    <None Include="Game\default.vs" />
     <None Include="MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
