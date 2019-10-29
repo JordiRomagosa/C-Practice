@@ -60,6 +60,11 @@ bool ModuleRenderExercise::Init()
 
 update_status ModuleRenderExercise::PreUpdate()
 {
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleRenderExercise::Update()
+{
 	int w, h;
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	glViewport(0, 0, w, h);
@@ -77,20 +82,20 @@ update_status ModuleRenderExercise::PreUpdate()
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f)) *aspect;
 	math::float4x4 proj = frustum.ProjectionMatrix();
 
+	math::float4 vert1 = float4(-1, -1, 0, 1);
+	math::float4 vert2 = float4(1, -1, 0, 1);
+	math::float4 vert3 = float4(0, 1, 0, 1);
+
 	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -4.0f), float3x3::RotateY(math::pi / 4.0f), float3(1.0f, 1.0f, 1.0f));
+	float4x4 transform = proj * matrix * float4x4(model);
 
-	//float4x4 view = float4x4::LookAt(view, math::float3(0.0f, 1.f, 4.0f), math::float3(0.0f, 0.0f, 0.0f), math::float3(0.0f, 1.0f, 0.0f));
-	//float4x4 transform = proj * view * float4x4(model);
+	vert1 = transform * vert1;
+	vert2 = transform * vert2;
+	vert3 = transform * vert3;
 
-
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleRenderExercise::Update()
-{
-	float buffer_data[] = { -1.0f, -1.0f, 0.0f,
-							   1.0f, -1.0f, 0.0f,
-							   0.0f, 1.0f, 0.0f };
+	float buffer_data[] = { vert1.x / vert1.w, vert1.y / vert1.w, vert1.z / vert1.w,
+							vert2.x / vert2.w, vert2.y / vert2.w, vert2.z / vert2.w,
+							vert3.x / vert3.w, vert3.y / vert3.w, vert3.z / vert3.w};
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
