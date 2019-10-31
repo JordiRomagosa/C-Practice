@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include <string>
 
 ModuleEditor::ModuleEditor()
 {
@@ -53,6 +54,9 @@ bool ModuleEditor::Init()
 
 	lastSecond = std::chrono::steady_clock::now();
 
+	fullscreen = FULLSCREEN;
+	resizable = RESIZABLE;
+
 	return true;
 }
 
@@ -86,25 +90,8 @@ update_status ModuleEditor::Update()
 	if (showDemo)
 		ImGui::ShowDemoWindow();
 
-	
-	/*if (firstFrame)
-	{
-		currentFrame = std::chrono::steady_clock::now();
-		firstFrame = false;
-	}
-	else
-	{
-		lastFrame = currentFrame;
-		currentFrame = std::chrono::steady_clock::now();
-		unsigned int millis = std::chrono::duration_cast<std::chrono::milliseconds>(currentFrame - lastFrame).count();
-		
-		if (ms_log.size() == 30)
-			ms_log.erase(ms_log.begin());
-		ms_log.push_back(millis);
-	}*/
-
 	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-	unsigned int millis = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastSecond).count();
+	float millis = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastSecond).count();
 	frameCount++;
 
 	if (millis > 1000)
@@ -112,23 +99,72 @@ update_status ModuleEditor::Update()
 		if (fps_log.size() == 30)
 			fps_log.erase(fps_log.begin());
 		fps_log.push_back(frameCount);
+		//fps_log.push_back(ImGui::GetIO().Framerate);
 
 		if (ms_log.size() == 30)
 			ms_log.erase(ms_log.begin());
-		ms_log.push_back(1.0 * frameCount / millis);
+		ms_log.push_back(float(frameCount) / millis);
 
 		lastSecond = currentTime;
 		frameCount = 0;
 	}
 
-	if (fps_log.size() > 0 || ms_log.size() > 0)
+	if (ImGui::CollapsingHeader("Frames"))
 	{
-		char title[25];
-		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 1500.0f, ImVec2(310, 100));
-		sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
-		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 10.0f, ImVec2(300, 100));
+		if (fps_log.size() > 0 || ms_log.size() > 0)
+		{
+			char title[25];
+			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 1500.0f, ImVec2(310, 100));
+			sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
+			ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 10.0f, ImVec2(300, 100));
+		}
 	}
+	
+	if (ImGui::CollapsingHeader("Window"))
+	{
+		if (ImGui::Checkbox("Fullscreen", &fullscreen))
+			App->window->SetFullScreen(fullscreen);
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Resizable", &resizable))
+			App->window->SetResizable(resizable);
+
+	}
+
+	if (ImGui::CollapsingHeader("Properties"))
+	{
+		ImGui::Text("SDL Version: %s", glGetString(GL_VERSION));
+		ImGui::Text("CPUs: %d (Cache: %dkb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+		ImGui::Text("System RAM: %dGB", SDL_GetSystemRAM()/1000);
+
+		std::string caps = "";
+		if (SDL_Has3DNow())
+			caps += "3DNow, ";
+		if (SDL_HasAVX())
+			caps += "AVX, ";
+		if (SDL_HasAVX2())
+			caps += "AVX2, ";
+		if (SDL_HasAltiVec())
+			caps += "AltiVec, ";
+		if (SDL_HasMMX())
+			caps += "MMX, ";
+		if (SDL_HasRDTSC())
+			caps += "RDTSC, ";
+		if (SDL_HasSSE())
+			caps += "SSE, ";
+		if (SDL_HasSSE2())
+			caps += "SSE2, ";
+		if (SDL_HasSSE3())
+			caps += "SSE3, ";
+		if (SDL_HasSSE41())
+			caps += "SSE41, ";
+		if (SDL_HasSSE42())
+			caps += "SSE42, ";
+		if (caps.size() > 0)  caps.resize(caps.size() - 2);
+		ImGui::Text("Caps: %s", &caps[0]);
+	}
+
+
 
 	return UPDATE_CONTINUE;
 }

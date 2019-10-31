@@ -30,6 +30,9 @@ public:
 
 	//The OpenGL context associated with the window
 	SDL_GLContext glcontext = NULL;
+
+	void SetFullScreen(bool fullscreen);
+	void SetResizable(bool resizable);
 };
 
 #endif // __ModuleWindow_H__

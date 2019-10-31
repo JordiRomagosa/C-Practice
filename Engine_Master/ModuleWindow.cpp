@@ -80,3 +80,19 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+void ModuleWindow::SetFullScreen(bool fullscreen)
+{
+	if (fullscreen)
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	else
+		SDL_SetWindowFullscreen(window, 0);
+}
+
+void ModuleWindow::SetResizable(bool resizable)
+{
+	if (resizable)
+		SDL_SetWindowResizable(window, SDL_TRUE);
+	else
+		SDL_SetWindowResizable(window, SDL_FALSE);
+}
+
