@@ -22,6 +22,7 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
+	void RequestBrowser(char * url);
 
 public:
 	ModuleRender* renderer = nullptr;

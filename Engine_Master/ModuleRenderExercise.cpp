@@ -47,15 +47,6 @@ bool ModuleRenderExercise::Init()
 	up = float3(0, 1, 0);
 	target = float3(0, 0, 0);
 
-	math::float3 f(target - eye); f.Normalize();
-	math::float3 s(f.Cross(up)); s.Normalize();
-	math::float3 u(s.Cross(f));
-	matrix[0][0] = s.x; matrix[0][1] = s.y; matrix[0][2] = s.z;
-	matrix[1][0] = u.x; matrix[1][1] = u.y; matrix[1][2] = u.z;
-	matrix[2][0] = -f.x; matrix[2][1] = -f.y; matrix[2][2] = -f.z;
-	matrix[0][3] = -s.Dot(eye); matrix[1][3] = -u.Dot(eye); matrix[2][3] = f.Dot(eye);
-	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
-
 	return true;
 }
 
@@ -83,25 +74,24 @@ update_status ModuleRenderExercise::Update()
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f)) *aspect;
 	math::float4x4 proj = frustum.ProjectionMatrix();
 
-	math::float4 vert1 = float4(-1, -1, 0, 1);
-	math::float4 vert2 = float4(1, -1, 0, 1);
-	math::float4 vert3 = float4(0, 1, 0, 1);
+	
+	float4x4 view;
+	math::float3 f(target - eye); f.Normalize();
+	math::float3 s(f.Cross(up)); s.Normalize();
+	math::float3 u(s.Cross(f));
+	view[0][0] = s.x; view[0][1] = s.y; view[0][2] = s.z;
+	view[1][0] = u.x; view[1][1] = u.y; view[1][2] = u.z;
+	view[2][0] = -f.x; view[2][1] = -f.y; view[2][2] = -f.z;
+	view[0][3] = -s.Dot(eye); view[1][3] = -u.Dot(eye); view[2][3] = f.Dot(eye);
+	view[3][0] = 0.0f; view[3][1] = 0.0f; view[3][2] = 0.0f; view[3][3] = 1.0f;
 
 	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -4.0f), float3x3::RotateY(math::pi / 4.0f), float3(1.0f, 1.0f, 1.0f));
-	float4x4 transform = proj * matrix * float4x4(model);
+	float4x4 transform = proj * view * float4x4(model);
 
-	vert1 = transform * vert1;
-	vert2 = transform * vert2;
-	vert3 = transform * vert3;
-
-
-	/*float buffer_data[] = { -1.0f, -1.0f, 0.0f,
+	float buffer_data[] = { -1.0f, -1.0f, 0.0f,
 							   1.0f, -1.0f, 0.0f,
-							   0.0f, 1.0f, 0.0f };*/
+							   0.0f, 1.0f, 0.0f };
 
-	float buffer_data[] = { vert1.x / vert1.w, vert1.y / vert1.w, vert1.z / vert1.w,
-							vert2.x / vert2.w, vert2.y / vert2.w, vert2.z / vert2.w,
-							vert3.x / vert3.w, vert3.y / vert3.w, vert3.z / vert3.w };
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -119,7 +109,15 @@ update_status ModuleRenderExercise::Update()
 		0,			// stride
 		(void*)0	// array buffer offset
 	);
+
 	glUseProgram(App->program->program);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
+		"model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
+		"view"), 1, GL_TRUE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
+		"proj"), 1, GL_TRUE, &proj[0][0]);
+
 	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

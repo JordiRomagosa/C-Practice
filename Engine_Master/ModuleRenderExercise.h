@@ -23,7 +23,6 @@ private:
 	math::float3 eye;
 	math::float3 up;
 	math::float3 target;
-
-	math::float4x4 matrix;
+	float buffer_data[];
 };
 

@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
-
 ModuleEditor::ModuleEditor()
 {
 }
@@ -50,11 +49,9 @@ bool ModuleEditor::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->window->glcontext);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
+	showDemo = false;
 
-	// Our state
-	show_demo_window = true;
-	show_another_window = false;
-	clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	lastSecond = std::chrono::steady_clock::now();
 
 	return true;
 }
@@ -71,41 +68,66 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
-	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-	if (show_demo_window)
-		ImGui::ShowDemoWindow(&show_demo_window);
+	ImGui::TextUnformatted(buffer.begin());
 
-	// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("Help"))
 	{
-		static float f = 0.0f;
-		static int counter = 0;
+		if (ImGui::MenuItem("Gui Demo"))
+			showDemo = !showDemo;
 
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+		if (ImGui::MenuItem("Github Link"))
+			App->RequestBrowser("https://github.com/JordiRomagosa/C-Practice/tree/master/Engine_Master");
+			
+		ImGui::EndMenu();
+	}
+	ImGui::EndMainMenuBar();
 
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &show_another_window);
+	if (showDemo)
+		ImGui::ShowDemoWindow();
 
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+	
+	/*if (firstFrame)
+	{
+		currentFrame = std::chrono::steady_clock::now();
+		firstFrame = false;
+	}
+	else
+	{
+		lastFrame = currentFrame;
+		currentFrame = std::chrono::steady_clock::now();
+		unsigned int millis = std::chrono::duration_cast<std::chrono::milliseconds>(currentFrame - lastFrame).count();
+		
+		if (ms_log.size() == 30)
+			ms_log.erase(ms_log.begin());
+		ms_log.push_back(millis);
+	}*/
 
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
+	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+	unsigned int millis = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastSecond).count();
+	frameCount++;
 
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
+	if (millis > 1000)
+	{
+		if (fps_log.size() == 30)
+			fps_log.erase(fps_log.begin());
+		fps_log.push_back(frameCount);
+
+		if (ms_log.size() == 30)
+			ms_log.erase(ms_log.begin());
+		ms_log.push_back(1.0 * frameCount / millis);
+
+		lastSecond = currentTime;
+		frameCount = 0;
 	}
 
-	// 3. Show another simple window.
-	if (show_another_window)
+	if (fps_log.size() > 0 || ms_log.size() > 0)
 	{
-		ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-		ImGui::Text("Hello from another window!");
-		if (ImGui::Button("Close Me"))
-			show_another_window = false;
-		ImGui::End();
+		char title[25];
+		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 1500.0f, ImVec2(310, 100));
+		sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
+		ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 10.0f, ImVec2(300, 100));
 	}
 
 	return UPDATE_CONTINUE;
