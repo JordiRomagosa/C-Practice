@@ -23,6 +23,6 @@ private:
 	math::float3 eye;
 	math::float3 up;
 	math::float3 target;
-	float buffer_data[];
+	unsigned vbo;
 };
 
