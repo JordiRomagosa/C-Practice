@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
+#include "ModuleTextures.h"
 #include "SDL.h"
 #include "glew.h"
 #include "MathGeoLib/include/MathGeoLib.h"
@@ -48,13 +49,19 @@ bool ModuleRenderExercise::Init()
 	target = float3(0, 0, 0);
 
 	float buffer_data[] = { -1.0f, -1.0f, 0.0f,
-							   1.0f, -1.0f, 0.0f,
-							   0.0f, 1.0f, 0.0f };
+							1.0f, -1.0f, 0.0f,
+							0.0f, 1.0f, 0.0f,
+	
+							0.0f, 0.0f,
+							1.0f, 0.0f,
+							0.5f, 1.0f};
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	lena = App->textures->LoadTexture("Lena.png");
 
 	return true;
 }
@@ -71,17 +78,6 @@ update_status ModuleRenderExercise::Update()
 	glViewport(0, 0, w, h);
 
 	float aspect = float(w) / float(h);
-
-	glEnableVertexAttribArray(0); // attribute 0
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(
-		0,			// attribute 0
-		3,			// number of componentes (3 floats)
-		GL_FLOAT,	// data type
-		GL_FALSE,	// should be normalized?
-		0,			// stride
-		(void*)0	// array buffer offset
-	);
 
 	Frustum frustum;
 	frustum.type = FrustumType::PerspectiveFrustum;
@@ -107,6 +103,21 @@ update_status ModuleRenderExercise::Update()
 	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -4.0f), float3x3::RotateY(math::pi / 4.0f), float3(1.0f, 1.0f, 1.0f));
 	float4x4 transform = proj * view * float4x4(model);
 
+	glEnableVertexAttribArray(0); // attribute 0
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glVertexAttribPointer(
+		0,			// attribute 0
+		3,			// number of componentes (3 floats)
+		GL_FLOAT,	// data type
+		GL_FALSE,	// should be normalized?
+		0,			// stride
+		(void*)0	// array buffer offset
+	);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0,
+		(void*)(sizeof(float) * 3 * 3) // buffer offset
+	);
+
 	glUseProgram(App->program->program);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
 		"model"), 1, GL_TRUE, &model[0][0]);
@@ -114,6 +125,10 @@ update_status ModuleRenderExercise::Update()
 		"view"), 1, GL_TRUE, &view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
 		"proj"), 1, GL_TRUE, &proj[0][0]);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, lena);
+	glUniform1i(glGetUniformLocation(App->program->program, "texture0"), 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris
 	glDisableVertexAttribArray(0);

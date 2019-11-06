@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 
+
 class ModuleTextures : public Module
 {
 public:
@@ -12,5 +13,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+
+	unsigned LoadTexture(char * path);
 };
 

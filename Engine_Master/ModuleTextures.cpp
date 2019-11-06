@@ -3,8 +3,6 @@
 #include "ilu.h"
 #include "ilut.h"
 
-
-
 ModuleTextures::ModuleTextures()
 {
 }
@@ -45,4 +43,18 @@ update_status ModuleTextures::PostUpdate()
 bool ModuleTextures::CleanUp()
 {
 	return true;
+}
+
+GLuint ModuleTextures::LoadTexture(char * path)
+{
+	ILuint ImageName;
+	ilGenImages(1, &ImageName);
+	ilBindImage(ImageName);
+
+	ilLoadImage(path);
+
+	GLuint Texture;
+	Texture = ilutGLBindTexImage();
+
+	return Texture;
 }
