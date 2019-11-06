@@ -40,8 +40,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\Dependencies\glew-2.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Dependencies\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/Dependencies/glew-2.1.0/include/;$(SolutionDir)/DevIL/include/IL/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Dependencies/glew-2.1.0/lib/Release/Win32;$(SolutionDir)/DevIL/lib/x86/Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)/Dependencies/glew-2.1.0/include/;$(SolutionDir)/DevIL/include/IL/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Dependencies/glew-2.1.0/lib/Release/Win32;$(SolutionDir)/DevIL/lib/x86/Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -49,13 +53,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include; ./Dependencies/glew-2.1.0/include/GL;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./SDL/include;./Dependencies/glew-2.1.0/include/GL;./DevIL/include/IL;./DevIL/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./Dependencies/glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./Dependencies/glew-2.1.0/lib/Release/Win32;./DevIL/lib/x86/Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DevIL.lib;ilu.lib;ilut.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -66,15 +71,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./SDL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./SDL/include;./Dependencies/glew-2.1.0/include/GL;./DevIL/include/IL;./DevIL/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./Dependencies/glew-2.1.0/lib/Release/Win32;./DevIL/lib/x86/Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DevIL.lib;ilu.lib;ilut.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -154,6 +159,7 @@
     <ClInclude Include="ModuleProgram.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleRenderExercise.h" />
+    <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +209,7 @@
     <ClCompile Include="ModuleProgram.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleRenderExercise.cpp" />
+    <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
   </ItemGroup>
   <ItemGroup>

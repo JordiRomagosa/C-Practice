@@ -28,6 +28,7 @@ public:
 	ModuleRender* renderer = nullptr;
 	ModuleRenderExercise* rendererExercise = nullptr;
 	ModuleWindow* window = nullptr;
+	ModuleTextures* textures = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleProgram* program = nullptr;
