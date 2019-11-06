@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <chrono>
 #include <vector>
+#include <string>
 
 class ModuleEditor : public Module
 {
@@ -23,7 +24,9 @@ public:
 
 private:
 	ImGuiIO io;
-	bool showDemo;
+	std::string caps = "";
+	bool showDemo = false;
+	bool showAbout = false;
 	std::chrono::steady_clock::time_point lastSecond;
 	short frameCount;
 	std::vector<float> ms_log;

@@ -2,7 +2,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
-#include <string>
+
+using namespace std;
 
 ModuleEditor::ModuleEditor()
 {
@@ -50,7 +51,30 @@ bool ModuleEditor::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->window->glcontext);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
-	showDemo = false;
+	caps = "";
+	if (SDL_Has3DNow())
+		caps += "3DNow, ";
+	if (SDL_HasAVX())
+		caps += "AVX, ";
+	if (SDL_HasAVX2())
+		caps += "AVX2, ";
+	if (SDL_HasAltiVec())
+		caps += "AltiVec, ";
+	if (SDL_HasMMX())
+		caps += "MMX, ";
+	if (SDL_HasRDTSC())
+		caps += "RDTSC, ";
+	if (SDL_HasSSE())
+		caps += "SSE, ";
+	if (SDL_HasSSE2())
+		caps += "SSE2, ";
+	if (SDL_HasSSE3())
+		caps += "SSE3, ";
+	if (SDL_HasSSE41())
+		caps += "SSE41, ";
+	if (SDL_HasSSE42())
+		caps += "SSE42, ";
+	if (caps.size() > 0)  caps.resize(caps.size() - 2);
 
 	lastSecond = std::chrono::steady_clock::now();
 
@@ -72,8 +96,6 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
-	ImGui::TextUnformatted(buffer.begin());
-
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("Help"))
 	{
@@ -82,6 +104,9 @@ update_status ModuleEditor::Update()
 
 		if (ImGui::MenuItem("Github Link"))
 			App->RequestBrowser("https://github.com/JordiRomagosa/C-Practice/tree/master/Engine_Master");
+
+		if (ImGui::MenuItem("About"))
+			showAbout = !showAbout;
 			
 		ImGui::EndMenu();
 	}
@@ -89,6 +114,10 @@ update_status ModuleEditor::Update()
 
 	if (showDemo)
 		ImGui::ShowDemoWindow();
+
+	ImGui::Begin("Configuration");
+	if (ImGui::CollapsingHeader("Console"))
+		ImGui::TextUnformatted(buffer.begin());
 
 	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
 	float millis = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastSecond).count();
@@ -116,6 +145,7 @@ update_status ModuleEditor::Update()
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 1500.0f, ImVec2(310, 100));
+			ImGui::SameLine();
 			sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 			ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 10.0f, ImVec2(300, 100));
 		}
@@ -136,35 +166,43 @@ update_status ModuleEditor::Update()
 		ImGui::Text("SDL Version: %s", glGetString(GL_VERSION));
 		ImGui::Text("CPUs: %d (Cache: %dkb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 		ImGui::Text("System RAM: %dGB", SDL_GetSystemRAM()/1000);
-
-		std::string caps = "";
-		if (SDL_Has3DNow())
-			caps += "3DNow, ";
-		if (SDL_HasAVX())
-			caps += "AVX, ";
-		if (SDL_HasAVX2())
-			caps += "AVX2, ";
-		if (SDL_HasAltiVec())
-			caps += "AltiVec, ";
-		if (SDL_HasMMX())
-			caps += "MMX, ";
-		if (SDL_HasRDTSC())
-			caps += "RDTSC, ";
-		if (SDL_HasSSE())
-			caps += "SSE, ";
-		if (SDL_HasSSE2())
-			caps += "SSE2, ";
-		if (SDL_HasSSE3())
-			caps += "SSE3, ";
-		if (SDL_HasSSE41())
-			caps += "SSE41, ";
-		if (SDL_HasSSE42())
-			caps += "SSE42, ";
-		if (caps.size() > 0)  caps.resize(caps.size() - 2);
 		ImGui::Text("Caps: %s", &caps[0]);
 	}
+	ImGui::End();
 
 
+	if (showAbout)
+	{
+		ImGui::Begin("About");
+
+		ImGui::Text("SAEGE: the Super Awersome and Experimental Game Engine");
+		ImGui::Text("Used for learning. This engine is under construction.");
+		ImGui::Text("Author: Jordi Romagosa Mellado");
+		ImGui::Text("Libraries used: Glew 2.1.0, SDL v2.0.10, IMGUI v1.73, MathGeoLib v1.5");
+
+		ImGui::Text("License:\n"
+			"\tMIT License - Copyright(c)2019 - Jordi Romagosa Mellado\n\n"
+
+			"\tPermission is hereby granted, free of charge, to any person obtaining a copy\n"
+			"\tof this software and associated documentation files(the \"Software\"), to deal\n"
+			"\tin the Software without restriction, including without limitation the rights\n"
+			"\tto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+			"\tcopies of the Software, and to permit persons to whom the Software is\n"
+			"\tfurnished to do so, subject to the following conditions :\n\n"
+
+			"\tThe above copyright notice and this permission notice shall be included in all\n"
+			"\tcopies or substantial portions of the Software.\n\n"
+
+			"\tTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+			"\tIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+			"\tFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE\n"
+			"\tAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+			"\tLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+			"\tOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
+			"\tSOFTWARE.");
+
+		ImGui::End();
+	}
 
 	return UPDATE_CONTINUE;
 }
