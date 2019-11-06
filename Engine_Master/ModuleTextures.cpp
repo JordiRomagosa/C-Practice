@@ -53,8 +53,10 @@ GLuint ModuleTextures::LoadTexture(char * path)
 
 	ilLoadImage(path);
 
-	GLuint Texture;
-	Texture = ilutGLBindTexImage();
+	GLuint texture;
+	texture = ilutGLBindTexImage();
 
-	return Texture;
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	return texture;
 }

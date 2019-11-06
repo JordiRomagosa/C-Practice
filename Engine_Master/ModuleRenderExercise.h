@@ -24,6 +24,7 @@ private:
 	math::float3 up;
 	math::float3 target;
 	unsigned vbo;
+	unsigned ivbo;
 	unsigned lena;
 };
 

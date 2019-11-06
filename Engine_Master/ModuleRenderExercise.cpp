@@ -50,16 +50,26 @@ bool ModuleRenderExercise::Init()
 
 	float buffer_data[] = { -1.0f, -1.0f, 0.0f,
 							1.0f, -1.0f, 0.0f,
-							0.0f, 1.0f, 0.0f,
+							1.0f, 1.0f, 0.0f,
+							-1.0f, 1.0f, 0.0f,
 	
 							0.0f, 0.0f,
 							1.0f, 0.0f,
-							0.5f, 1.0f};
+							1.0f, 1.0f,
+							0.0f, 1.0f};
+
+	int indices[] = {	0, 1, 2,
+						0, 2, 3};
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &ivbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ivbo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	lena = App->textures->LoadTexture("Lena.png");
 
@@ -113,10 +123,6 @@ update_status ModuleRenderExercise::Update()
 		0,			// stride
 		(void*)0	// array buffer offset
 	);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0,
-		(void*)(sizeof(float) * 3 * 3) // buffer offset
-	);
 
 	glUseProgram(App->program->program);
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
@@ -126,13 +132,25 @@ update_status ModuleRenderExercise::Update()
 	glUniformMatrix4fv(glGetUniformLocation(App->program->program,
 		"proj"), 1, GL_TRUE, &proj[0][0]);
 
+	//glDrawArrays(GL_TRIANGLES, 0, 4); // start at 0 and 3 tris
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ivbo);
+	glDrawElements(
+		GL_TRIANGLES,      // mode
+		6,				   // count
+		GL_UNSIGNED_INT,   // type
+		(void*)0           // element array buffer offset
+	);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0,
+		(void*)(sizeof(float) * 3 * 4) // buffer offset
+	);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, lena);
 	glUniform1i(glGetUniformLocation(App->program->program, "texture0"), 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris
-	glDisableVertexAttribArray(0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return UPDATE_CONTINUE;
 }
@@ -145,5 +163,6 @@ update_status ModuleRenderExercise::PostUpdate()
 bool ModuleRenderExercise::CleanUp()
 {
 	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ivbo);
 	return true;
 }
