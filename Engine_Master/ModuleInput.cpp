@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleCamera.h"
+#include "ModuleRender.h"
 #include "SDL/include/SDL.h"
 
 ModuleInput::ModuleInput()
@@ -33,6 +35,38 @@ update_status ModuleInput::Update()
 
 	keyboard = SDL_GetKeyboardState(NULL);
 
+	if (keyboard[SDL_SCANCODE_ESCAPE])
+		return UPDATE_STOP;
+
+	bool shift = keyboard[SDL_SCANCODE_LSHIFT] || keyboard[SDL_SCANCODE_RSHIFT];
+
+	if (keyboard[SDL_SCANCODE_A] && !keyboard[SDL_SCANCODE_D])
+		App->camera->Translate(-1, 0, shift);
+	if (keyboard[SDL_SCANCODE_D] && !keyboard[SDL_SCANCODE_A])
+		App->camera->Translate(1, 0, shift);
+	if (keyboard[SDL_SCANCODE_W] && !keyboard[SDL_SCANCODE_S])
+		App->camera->Translate(0, -1, shift);
+	if (keyboard[SDL_SCANCODE_S] && !keyboard[SDL_SCANCODE_W])
+		App->camera->Translate(0, 1, shift);
+
+	SDL_Event sdlEvent;
+
+	while (SDL_PollEvent(&sdlEvent) != 0)
+	{
+		switch (sdlEvent.type)
+		{
+		case SDL_QUIT:
+			return UPDATE_STOP;
+
+		case SDL_WINDOWEVENT:
+			if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+			break;
+		}
+		CameraMovementWithMouse(sdlEvent);
+	}
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -42,4 +76,60 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::CameraMovementWithMouse(SDL_Event & event) {
+
+	//if (event.type == SDL_MOUSEBUTTONDOWN)
+	//{
+	//	lastMousePosition = glm::vec2(event.button.x, event.button.y);
+	//	if (event.button.button == SDL_BUTTON_RIGHT) {
+	//		rightMouseButtonIsDown = true;
+	//	}
+	//	if (event.button.button == SDL_BUTTON_MIDDLE) {
+	//		middleMouseButtonIsDown = true;
+	//	}
+	//}
+	//if (event.type == SDL_MOUSEBUTTONUP)
+	//{
+	//	if (event.button.button == SDL_BUTTON_RIGHT) {
+	//		rightMouseButtonIsDown = false;
+	//	}
+	//	if (event.button.button == SDL_BUTTON_MIDDLE) {
+	//		middleMouseButtonIsDown = false;
+	//	}
+	//}
+	//if (event.type == SDL_MOUSEWHEEL) {
+	//	if (event.wheel.y > 0) // scroll up
+	//	{
+	//		Engine->moduleCamera->Zoom(true);
+	//	}
+	//	else if (event.wheel.y < 0) // scroll down
+	//	{
+	//		Engine->moduleCamera->Zoom(false);
+	//	}
+
+	//}
+	//if (rightMouseButtonIsDown && event.type == SDL_MOUSEMOTION) {
+
+	//	int mouseXPos = (event.motion.x - lastMousePosition.x) *mouseSensitivity;
+	//	int mouseYPos = (lastMousePosition.y - event.motion.y) *mouseSensitivity;
+
+	//	lastMousePosition.x = event.motion.x;
+	//	lastMousePosition.y = event.motion.y;
+	//	Engine->moduleCamera->MoveCameraWithMousePosition(glm::vec2(mouseXPos, mouseYPos));
+	//}
+
+	//if (middleMouseButtonIsDown && event.type == SDL_MOUSEMOTION) {
+
+	//	int mouseXPos = (event.motion.x - lastMousePosition.x) * mouseSensitivity;
+	//	int mouseYPos = (event.motion.y - lastMousePosition.y) * mouseSensitivity;
+
+	//	glm::vec2 translationDirection = glm::vec2(0.0f);
+	//	lastMousePosition.x = event.motion.x;
+	//	lastMousePosition.y = event.motion.y;
+	//	translationDirection.x = mouseXPos;
+	//	translationDirection.y = mouseYPos;
+	//	Engine->moduleCamera->Translate(translationDirection);
+	//}
 }

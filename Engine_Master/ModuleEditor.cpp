@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleCamera.h"
 
 using namespace std;
 
@@ -81,6 +82,9 @@ bool ModuleEditor::Init()
 	fullscreen = FULLSCREEN;
 	resizable = RESIZABLE;
 
+	verticalPOV = math::pi / 4.0f;
+	App->camera->SetFOV(verticalPOV);
+
 	return true;
 }
 
@@ -110,10 +114,26 @@ update_status ModuleEditor::Update()
 			
 		ImGui::EndMenu();
 	}
+	if (ImGui::BeginMenu("Camera"))
+	{
+		if (ImGui::MenuItem("Camera Options"))
+			showCamera = !showCamera;
+
+		ImGui::EndMenu();
+	}
 	ImGui::EndMainMenuBar();
 
 	if (showDemo)
 		ImGui::ShowDemoWindow();
+
+	if (showCamera)
+	{
+		ImGui::Begin("Camera Options");
+		ImGui::SliderFloat("Vertical POV", &verticalPOV, 0.01, math::pi - 0.01, "%.3f");
+		App->camera->SetFOV(verticalPOV);
+		
+		ImGui::End();
+	}
 
 	ImGui::Begin("Configuration");
 	if (ImGui::CollapsingHeader("Console"))

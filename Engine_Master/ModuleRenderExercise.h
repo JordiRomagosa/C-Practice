@@ -26,5 +26,7 @@ private:
 	unsigned vbo;
 	unsigned ivbo;
 	unsigned lena;
+	unsigned mario;
+	unsigned lantern;
 };
 

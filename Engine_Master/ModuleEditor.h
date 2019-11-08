@@ -27,6 +27,7 @@ private:
 	std::string caps = "";
 	bool showDemo = false;
 	bool showAbout = false;
+	bool showCamera = false;
 	std::chrono::steady_clock::time_point lastSecond;
 	short frameCount;
 	std::vector<float> ms_log;
@@ -34,6 +35,8 @@ private:
 
 	bool fullscreen;
 	bool resizable;
+
+	float verticalPOV;
 
 public:
 	ImGuiTextBuffer buffer;

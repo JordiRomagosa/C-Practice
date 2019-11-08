@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
 #include "ModuleTextures.h"
+#include "ModuleCamera.h"
 #include "SDL.h"
 #include "glew.h"
 #include "MathGeoLib/include/MathGeoLib.h"
@@ -72,6 +73,8 @@ bool ModuleRenderExercise::Init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	lena = App->textures->LoadTexture("Lena.png");
+	mario = App->textures->LoadTexture("mario.dds");
+	lantern = App->textures->LoadTexture("lantern.jpg");
 
 	return true;
 }
@@ -83,12 +86,6 @@ update_status ModuleRenderExercise::PreUpdate()
 
 update_status ModuleRenderExercise::Update()
 {
-	int w, h;
-	SDL_GetWindowSize(App->window->window, &w, &h);
-	glViewport(0, 0, w, h);
-
-	float aspect = float(w) / float(h);
-
 	glLineWidth(1.0f);
 	float d = 200.0f;
 	glBegin(GL_LINES);
@@ -124,28 +121,19 @@ update_status ModuleRenderExercise::Update()
 	glEnd();
 	glLineWidth(1.0f);
 
-	Frustum frustum;
-	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3::zero;
-	frustum.front = -float3::unitZ;
-	frustum.up = float3::unitY;
-	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 100.0f;
-	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f)) *aspect;
-	math::float4x4 proj = frustum.ProjectionMatrix();
+	math::float4x4 proj = App->camera->GetProjectionMatrix();
 
-	float4x4 view;
-	math::float3 f(target - eye); f.Normalize();
+	float4x4 view = App->camera->GetViewMatrix();
+	/*math::float3 f(target - eye); f.Normalize();
 	math::float3 s(f.Cross(up)); s.Normalize();
 	math::float3 u(s.Cross(f));
 	view[0][0] = s.x; view[0][1] = s.y; view[0][2] = s.z;
 	view[1][0] = u.x; view[1][1] = u.y; view[1][2] = u.z;
 	view[2][0] = -f.x; view[2][1] = -f.y; view[2][2] = -f.z;
 	view[0][3] = -s.Dot(eye); view[1][3] = -u.Dot(eye); view[2][3] = f.Dot(eye);
-	view[3][0] = 0.0f; view[3][1] = 0.0f; view[3][2] = 0.0f; view[3][3] = 1.0f;
+	view[3][0] = 0.0f; view[3][1] = 0.0f; view[3][2] = 0.0f; view[3][3] = 1.0f;*/
 
-	float4x4 model = float4x4::FromTRS(float3(0.0f, 0.0f, -4.0f), float3x3::RotateY(math::pi / 4.0f), float3(1.0f, 1.0f, 1.0f));
+	float4x4 model = App->camera->GetModelMatrix();
 	float4x4 transform = proj * view * float4x4(model);
 
 	glEnableVertexAttribArray(0); // attribute 0
@@ -181,6 +169,7 @@ update_status ModuleRenderExercise::Update()
 		(void*)(sizeof(float) * 3 * 4) // buffer offset
 	);
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, lena);
 	glUniform1i(glGetUniformLocation(App->program->program, "texture0"), 0);
 
 

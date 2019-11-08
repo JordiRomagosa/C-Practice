@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
+#include "ModuleCamera.h"
 #include "ModuleWindow.h"
 #include "SDL.h"
 #include "glew.h"
@@ -23,6 +24,9 @@ bool ModuleRender::Init()
 update_status ModuleRender::PreUpdate()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	int w, h;
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	glViewport(0, 0, w, h);
 
 	return UPDATE_CONTINUE;
 }
@@ -52,5 +56,6 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::WindowResized(unsigned width, unsigned height)
 {
+	App->camera->SetAspectRatio(width, height);
 }
 
