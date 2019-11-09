@@ -19,15 +19,13 @@ bool ModuleCamera::Init()
 	float aspect = float(w) / float(h);
 
 	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3::zero;
+	frustum.pos = float3(0, -1, -2);
 	frustum.front = -float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect);
-
-	cameraRight = frustum.up.Cross(frustum.front); cameraRight.Normalize();
 
 	CalculateMatrixes();
 	return true;
@@ -83,7 +81,8 @@ math::float4x4 ModuleCamera::GetProjectionMatrix() {
 
 void ModuleCamera::CalculateMatrixes() {
 	model = math::float4x4::FromTRS(frustum.pos, math::float3x3::RotateY(math::pi / 4.0f), math::float3(1.0f, 1.0f, 1.0f));
-	view = LookAt(math::float3(0.0f, 1.f, 4.0f), math::float3(0.0f, 0.0f, 0.0f), math::float3(0.0f, 1.0f, 0.0f));
+	//view = LookAt(math::float3(0.0f, 1.f, 4.0f), math::float3(0.0f, 0.0f, 0.0f), math::float3(0.0f, 1.0f, 0.0f));
+	view = math::float4x4::LookAt(frustum.pos, frustum.pos + frustum.front, frustum.front, frustum.up, math::float3(0.0f, 1.0f, 0.0f));
 	proj = frustum.ProjectionMatrix();
 }
 
@@ -103,23 +102,34 @@ void ModuleCamera::SetAspectRatio(float height, float width)
 	CalculateMatrixes();
 }
 
-void ModuleCamera::Translate(int right, int up, bool shift)
+void ModuleCamera::Translate(int right, int up, int forward, bool shift)
 {
 	int speedMult = 1;
 	if (shift)
-		int speedMult = shiftSpeedMultiplier;
+		speedMult = shiftSpeedMultiplier;
 
 	if (right > 0)
-		frustum.pos += cameraRight * cameraSpeed * speedMult;
-
+		frustum.pos += frustum.WorldRight() * cameraMovementSpeed * speedMult;
 	if (right < 0)
-		frustum.pos -= cameraRight * cameraSpeed * speedMult;
+		frustum.pos -= frustum.WorldRight() * cameraMovementSpeed * speedMult;
 
 	if (up > 0)
-		frustum.pos += frustum.up * cameraSpeed * speedMult;
-
+		frustum.pos += float3(0, 1, 0) * cameraMovementSpeed * speedMult;
 	if (up < 0)
-		frustum.pos -= frustum.up * cameraSpeed * speedMult;
+		frustum.pos -= float3(0, 1, 0) * cameraMovementSpeed * speedMult;
+
+	if (forward > 0)
+		frustum.pos += frustum.front * cameraMovementSpeed * speedMult;
+	if (forward < 0)
+		frustum.pos -= frustum.front * cameraMovementSpeed * speedMult;
+	
+	CalculateMatrixes();
+}
+
+void ModuleCamera::Rotate(int pitch, int yaw)
+{
+	
+
 
 	CalculateMatrixes();
 }

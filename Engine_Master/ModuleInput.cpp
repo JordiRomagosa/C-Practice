@@ -41,13 +41,26 @@ update_status ModuleInput::Update()
 	bool shift = keyboard[SDL_SCANCODE_LSHIFT] || keyboard[SDL_SCANCODE_RSHIFT];
 
 	if (keyboard[SDL_SCANCODE_A] && !keyboard[SDL_SCANCODE_D])
-		App->camera->Translate(-1, 0, shift);
+		App->camera->Translate(1, 0, 0, shift);
 	if (keyboard[SDL_SCANCODE_D] && !keyboard[SDL_SCANCODE_A])
-		App->camera->Translate(1, 0, shift);
+		App->camera->Translate(-1, 0, 0, shift);
 	if (keyboard[SDL_SCANCODE_W] && !keyboard[SDL_SCANCODE_S])
-		App->camera->Translate(0, -1, shift);
+		App->camera->Translate(0, 0, -1, shift);
 	if (keyboard[SDL_SCANCODE_S] && !keyboard[SDL_SCANCODE_W])
-		App->camera->Translate(0, 1, shift);
+		App->camera->Translate(0, 0, 1, shift);
+	if (keyboard[SDL_SCANCODE_Q] && !keyboard[SDL_SCANCODE_E])
+		App->camera->Translate(0, -1, 0, shift);
+	if (keyboard[SDL_SCANCODE_E] && !keyboard[SDL_SCANCODE_Q])
+		App->camera->Translate(0, 1, 0, shift);
+
+	if (keyboard[SDL_SCANCODE_LEFT] && !keyboard[SDL_SCANCODE_RIGHT])
+		App->camera->Rotate(-1, 0);
+	if (keyboard[SDL_SCANCODE_RIGHT] && !keyboard[SDL_SCANCODE_LEFT])
+		App->camera->Rotate(1, 0);
+	if (keyboard[SDL_SCANCODE_UP] && !keyboard[SDL_SCANCODE_DOWN])
+		App->camera->Rotate(0, 1);
+	if (keyboard[SDL_SCANCODE_DOWN] && !keyboard[SDL_SCANCODE_UP])
+		App->camera->Rotate(0, -1);
 
 	SDL_Event sdlEvent;
 

@@ -20,16 +20,17 @@ public:
 	void CalculateMatrixes();
 	void SetFOV(float verticalFOV);
 	void SetAspectRatio(float height, float width);
-	void Translate(int right, int up, bool shift);
+	void Translate(int right, int up, int forward, bool shift);
+	void Rotate(int pitch, int yaw);
 
 private:
 	Frustum frustum;
 	math::float4x4 model;
 	math::float4x4 view;
 	math::float4x4 proj;
-	float3 cameraRight;
 
-	float cameraSpeed = 0.01f;
+	float cameraMovementSpeed = 0.01f;
 	int shiftSpeedMultiplier = 2;
+	float cameraRotationSpeed = 0.1f;
 };
 
