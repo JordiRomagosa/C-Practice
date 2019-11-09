@@ -28,9 +28,10 @@ private:
 	math::float4x4 model;
 	math::float4x4 view;
 	math::float4x4 proj;
+	float3 cameraRight;
 
 	float cameraMovementSpeed = 0.01f;
 	int shiftSpeedMultiplier = 2;
-	float cameraRotationSpeed = 0.1f;
+	float cameraRotationSpeed = 0.05f;
 };
 
