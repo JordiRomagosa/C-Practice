@@ -29,6 +29,8 @@ bool ModuleCamera::Init()
 
 	cameraRight = frustum.up.Cross(frustum.front); cameraRight.Normalize();
 
+	model = math::float4x4::FromTRS(float3(0, 0, 0), math::float3x3::RotateX(0.0f) * math::float3x3::RotateY(0.0f), math::float3(1.0f, 1.0f, 1.0f));
+
 	CalculateMatrixes();
 	return true;
 }
@@ -82,8 +84,8 @@ math::float4x4 ModuleCamera::GetProjectionMatrix() {
 }
 
 void ModuleCamera::CalculateMatrixes() {
-	model = math::float4x4::FromTRS(frustum.pos, math::float3x3::RotateY(math::pi / 4.0f), math::float3(1.0f, 1.0f, 1.0f));
-	view = LookAt(math::float3(0.0f, 1.f, 4.0f), math::float3(0.0f, 0.0f, 0.0f), math::float3(0.0f, 1.0f, 0.0f));
+	view = frustum.ViewMatrix();
+	//view = LookAt(math::float3(0.0f, 1.f, 4.0f), math::float3(0.0f, 0.0f, 0.0f), math::float3(0.0f, 1.0f, 0.0f));
 	/*frustum.front.Normalize();
 	frustum.pos.Normalize();
 	frustum.up.Normalize();
@@ -138,21 +140,21 @@ void ModuleCamera::Rotate(int pitch, int yaw)
 {
 	math::float3x3 rotationMatrix;
 	float angle = math::DegToRad(cameraRotationSpeed);
-	if (pitch < 0 || yaw < 0)
+	if (pitch > 0 || yaw > 0)
 		angle *= -1;
 	if (yaw != 0)
 	{
-		rotationMatrix[0][0] = math::Cos(angle);
-		rotationMatrix[1][0] = 0;
-		rotationMatrix[2][0] = math::Sin(angle);
+		rotationMatrix = math::float3x3::RotateY(angle);
 
-		rotationMatrix[0][1] = 0;
-		rotationMatrix[1][1] = 1;
-		rotationMatrix[2][1] = 0;
+		float3 mult = rotationMatrix * frustum.front;
+		frustum.front = mult;
+		mult = rotationMatrix * frustum.up;
+		frustum.up = mult;
+	}
 
-		rotationMatrix[0][2] = -math::Sin(angle);
-		rotationMatrix[1][2] = 0;
-		rotationMatrix[2][2] = math::Cos(angle);
+	if (pitch != 0)
+	{
+		rotationMatrix = math::float3x3::RotateAxisAngle(cameraRight,angle);
 
 		float3 mult = rotationMatrix * frustum.front;
 		frustum.front = mult;
