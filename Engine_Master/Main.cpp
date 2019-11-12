@@ -7,6 +7,9 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+#include "TimerMilliS.h"
+#include "TimerMicroS.h"
+
 enum main_states
 {
 	MAIN_CREATION,
@@ -25,13 +28,17 @@ int main(int argc, char ** argv)
 
 	while (state != MAIN_EXIT)
 	{
+		TimerMicroS timer;
+		TimerMilliS timer2;
+
 		switch (state)
 		{
 		case MAIN_CREATION:
-
+			
 			LOG("Application Creation --------------");
 			App = new Application();
 			state = MAIN_START;
+			
 			break;
 
 		case MAIN_START:
@@ -52,6 +59,8 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
+			timer.Start();
+			timer2.Start();
 			int update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR)
@@ -62,6 +71,8 @@ int main(int argc, char ** argv)
 
 			if (update_return == UPDATE_STOP)
 				state = MAIN_FINISH;
+			LOG("Time for App update: %d microS", timer.Read());
+			LOG("Time for App update: %d ms", timer2.Read());
 		}
 			break;
 
